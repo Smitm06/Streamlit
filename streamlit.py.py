@@ -1,26 +1,28 @@
 import streamlit as st
 import torch
-
-# Load your model and vocabulary functions here
-# ---------------------------------------------
-# Example:
-# from your_model_file import load_model, load_vocab, predict_next_words
+from ipynb.fs.full.text_generator import load_vocab, NextWordModel, generate  
 
 # Streamlit App Structure
 def main():
     st.title("MLP-based Text Generator")
     
+    # Load vocabulary and initialize parameters
+    word2idx, idx2word, vocab_size, words = load_vocab("D:/ML_NIPUNBATRA/Ass3/shakespeare_input.txt")  # Update with actual path
+    padidx = word2idx.get('.', word2idx['<UNK>'])  # Handle missing period case
+
     # Sliders and controls
     context_length = st.selectbox("Context Length", [5, 10])
     embedding_dim = st.selectbox("Embedding Dimension", [32, 64])
     activation_fn_name = st.selectbox("Activation Function", ["ReLU", "Tanh"])
 
-    # Initialize or load your model with the selected parameters
-    # ----------------------------------------------------------
-    # model = load_model(context_length, embedding_dim, activation_fn_name)
+    # Initialize or load the appropriate model based on selected parameters
+    # Define the model path with the updated information
+    model_key = f"e{embedding_dim}_c{context_length}_{activation_fn_name[0].lower()}"
+    model = NextWordModel(embedding_dim, context_length, activation_fn_name)
+    model_path = f"D:/ML_NIPUNBATRA/Ass3/models/{model_key}.pth"  # Replace backslashes with forward slashes for compatibility
+    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+    model.eval()
 
-    # # Load vocabulary and inverse vocabulary
-    # vocab, inv_vocab = load_vocab()  # Replace with your vocabulary loading function
 
     # Text input and prediction button
     user_input = st.text_input("Enter your text:")
@@ -28,10 +30,9 @@ def main():
 
     if st.button("Generate Text"):
         if user_input:
-            
-            # generated_text = predict_next_words(model, user_input, vocab, inv_vocab, num_words=num_words)
+            generated_text = generate(model, user_input, num_words, word2idx, idx2word, padidx)
             st.write("Generated Text:")
-            # st.write(generated_text)
+            st.write(generated_text)
         else:
             st.warning("Please enter some text to start generating.")
 
