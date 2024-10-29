@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 # In[39]:
 
 
-text = open(r"D:/ML_NIPUNBATRA/Ass3/shakespeare_input.txt", "r").read()
+text = open("shakespeare_input.txt", "r").read()
 text = re.sub(r'[^a-zA-Z\s.,!?:\']+', '', text)
 text = re.sub(r'([.,!?:])', r' \1 ', text)
 words = text.lower().split()
