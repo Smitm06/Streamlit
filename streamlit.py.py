@@ -11,7 +11,7 @@ def main():
     st.title("MLP-based Text Generator")
     
     # Sliders and controls
-    context_length = st.slider("Context Length", 5, 15, step=5)
+    context_length = st.selectbox("Context Length", [5, 10])
     embedding_dim = st.selectbox("Embedding Dimension", [32, 64])
     activation_fn_name = st.selectbox("Activation Function", ["ReLU", "Tanh"])
 
