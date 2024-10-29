@@ -1,6 +1,6 @@
 import streamlit as st
 import torch
-from ipynb.fs.full.text_generator import load_vocab, NextWordModel, generate  
+from text_generator import load_vocab, NextWordModel, generate
 
 # Streamlit App Structure
 def main():
